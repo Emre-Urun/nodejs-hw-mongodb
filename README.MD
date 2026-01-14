@@ -1,0 +1,228 @@
+# Contacts API - Node.js MongoDB Project
+
+A RESTful API for managing contacts built with Node.js, Express, and MongoDB. This project demonstrates CRUD operations, database integration, and proper API architecture.
+
+## 🚀 Features
+
+- **RESTful API** - Clean and intuitive endpoint design
+- **MongoDB Integration** - Persistent data storage with Mongoose ODM
+- **Express Framework** - Fast and minimal web framework
+- **Error Handling** - Comprehensive error management
+- **CORS Enabled** - Cross-origin resource sharing support
+- **Logging** - Request logging with Pino
+- **Environment Variables** - Secure configuration management
+
+## 📋 Prerequisites
+
+Before running this project, make sure you have:
+
+- Node.js (v14 or higher)
+- MongoDB Atlas account
+- npm or yarn package manager
+
+## 🛠️ Installation
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/Emre-Urun/nodejs-hw-mongodb.git
+cd nodejs-hw-mongodb
+```
+
+2. **Checkout to the project branch**
+
+```bash
+git checkout hw2-mongodb
+```
+
+3. **Install dependencies**
+
+```bash
+npm install
+```
+
+4. **Configure environment variables**
+
+Create a `.env` file in the root directory:
+
+```env
+PORT=3000
+MONGODB_USER=your_mongodb_username
+MONGODB_PASSWORD=your_mongodb_password
+MONGODB_URL=your_mongodb_cluster_url
+MONGODB_DB=your_database_name
+```
+
+5. **Import initial data**
+
+Import the `contacts.json` file into your MongoDB database using MongoDB Compass or the MongoDB Atlas interface.
+
+## 🏃‍♂️ Running the Application
+
+### Development Mode
+
+```bash
+npm run dev
+```
+
+### Production Mode
+
+```bash
+npm start
+```
+
+The server will start on `http://localhost:3000` (or your configured PORT).
+
+## 📡 API Endpoints
+
+### Get All Contacts
+
+```http
+GET /contacts
+```
+
+**Response (200 OK)**
+
+```json
+{
+  "status": 200,
+  "message": "Successfully found contacts!",
+  "data": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "name": "John Doe",
+      "phoneNumber": "+1234567890",
+      "email": "john@example.com",
+      "isFavourite": false,
+      "contactType": "personal",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+  ]
+}
+```
+
+### Get Contact by ID
+
+```http
+GET /contacts/:contactId
+```
+
+**Response (200 OK)**
+
+```json
+{
+  "status": 200,
+  "message": "Successfully found contact with id: 507f1f77bcf86cd799439011!",
+  "data": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "John Doe",
+    "phoneNumber": "+1234567890",
+    "email": "john@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  }
+}
+```
+
+**Response (404 Not Found)**
+
+```json
+{
+  "message": "Contact not found"
+}
+```
+
+## 🗂️ Project Structure
+
+```
+nodejs-hw-mongodb/
+├── src/
+│   ├── controllers/
+│   │   └── contacts.js          # Request handlers
+│   ├── db/
+│   │   ├── models/
+│   │   │   └── contact.js       # Mongoose schema
+│   │   └── initMongoConnection.js
+│   ├── services/
+│   │   └── contacts.js          # Business logic
+│   ├── utils/
+│   │   └── env.js               # Environment helper
+│   ├── server.js                # Express server setup
+│   └── index.js                 # Application entry point
+├── .env.example                 # Environment variables template
+├── .gitignore
+├── .prettierrc
+├── package.json
+└── README.md
+```
+
+## 📊 Data Model
+
+### Contact Schema
+
+```javascript
+{
+  name: String (required),
+  phoneNumber: String (required),
+  email: String (optional),
+  isFavourite: Boolean (default: false),
+  contactType: String (enum: ['work', 'home', 'personal'], default: 'personal'),
+  createdAt: Date (auto-generated),
+  updatedAt: Date (auto-generated)
+}
+```
+
+## 🔧 Technologies Used
+
+- **Node.js** - JavaScript runtime
+- **Express** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - ODM for MongoDB
+- **dotenv** - Environment variable management
+- **cors** - CORS middleware
+- **pino-http** - HTTP logger
+- **nodemon** - Development auto-restart
+
+## 🌐 Deployment
+
+This application is deployed on Render.com.
+
+**Live URL:** [Your Render deployment URL]
+
+## 📝 Development
+
+### Code Quality
+
+- ESLint for code linting
+- Prettier for code formatting
+
+### Running Linter
+
+```bash
+npm run lint
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is created for educational purposes.
+
+## 👤 Author
+
+Your Name - [Emre-Urun]
+
+## 🙏 Acknowledgments
+
+- Thanks to the course instructors for the comprehensive assignment
+- MongoDB Atlas for database hosting
+- Render.com for application hosting
