@@ -1,87 +1,87 @@
-# Contacts API - Node.js MongoDB Project
+# İletişim API - Node.js MongoDB Projesi
 
-A RESTful API for managing contacts built with Node.js, Express, and MongoDB. This project demonstrates CRUD operations, database integration, and proper API architecture.
+Node.js, Express ve MongoDB kullanılarak geliştirilmiş bir iletişim yönetim REST API'si. Bu proje CRUD işlemlerini, veritabanı entegrasyonunu ve doğru API mimarisini göstermektedir.
 
-## 🚀 Features
+## 🚀 Özellikler
 
-- **RESTful API** - Clean and intuitive endpoint design
-- **MongoDB Integration** - Persistent data storage with Mongoose ODM
-- **Express Framework** - Fast and minimal web framework
-- **Error Handling** - Comprehensive error management
-- **CORS Enabled** - Cross-origin resource sharing support
-- **Logging** - Request logging with Pino
-- **Environment Variables** - Secure configuration management
+- **RESTful API** - Temiz ve sezgisel endpoint tasarımı
+- **MongoDB Entegrasyonu** - Mongoose ODM ile kalıcı veri depolama
+- **Express Framework** - Hızlı ve minimal web framework
+- **Hata Yönetimi** - Kapsamlı hata yönetim sistemi
+- **CORS Desteği** - Cross-origin kaynak paylaşımı desteği
+- **Loglama** - Pino ile istek loglama
+- **Ortam Değişkenleri** - Güvenli yapılandırma yönetimi
 
-## 📋 Prerequisites
+## 📋 Gereksinimler
 
-Before running this project, make sure you have:
+Projeyi çalıştırmadan önce aşağıdakilere sahip olduğunuzdan emin olun:
 
-- Node.js (v14 or higher)
-- MongoDB Atlas account
-- npm or yarn package manager
+- Node.js (v14 veya üzeri)
+- MongoDB Atlas hesabı
+- npm veya yarn paket yöneticisi
 
-## 🛠️ Installation
+## 🛠️ Kurulum
 
-1. **Clone the repository**
+1. **Depoyu klonlayın**
 
 ```bash
 git clone https://github.com/Emre-Urun/nodejs-hw-mongodb.git
 cd nodejs-hw-mongodb
 ```
 
-2. **Checkout to the project branch**
+2. **Proje dalına geçin**
 
 ```bash
 git checkout hw2-mongodb
 ```
 
-3. **Install dependencies**
+3. **Bağımlılıkları yükleyin**
 
 ```bash
 npm install
 ```
 
-4. **Configure environment variables**
+4. **Ortam değişkenlerini yapılandırın**
 
-Create a `.env` file in the root directory:
+Kök dizinde `.env` dosyası oluşturun:
 
 ```env
 PORT=3000
-MONGODB_USER=your_mongodb_username
-MONGODB_PASSWORD=your_mongodb_password
-MONGODB_URL=your_mongodb_cluster_url
-MONGODB_DB=your_database_name
+MONGODB_USER=mongodb_kullanıcı_adınız
+MONGODB_PASSWORD=mongodb_şifreniz
+MONGODB_URL=mongodb_cluster_url
+MONGODB_DB=veritabanı_adınız
 ```
 
-5. **Import initial data**
+5. **Başlangıç verilerini içe aktarın**
 
-Import the `contacts.json` file into your MongoDB database using MongoDB Compass or the MongoDB Atlas interface.
+`contacts.json` dosyasını MongoDB Compass veya MongoDB Atlas arayüzünü kullanarak veritabanınıza aktarın.
 
-## 🏃‍♂️ Running the Application
+## 🏃‍♂️ Uygulamayı Çalıştırma
 
-### Development Mode
+### Geliştirme Modu
 
 ```bash
 npm run dev
 ```
 
-### Production Mode
+### Üretim Modu
 
 ```bash
 npm start
 ```
 
-The server will start on `http://localhost:3000` (or your configured PORT).
+Sunucu `http://localhost:3000` adresinde başlayacaktır (veya yapılandırdığınız PORT).
 
-## 📡 API Endpoints
+## 📡 API Endpoint'leri
 
-### Get All Contacts
+### Tüm İletişimleri Getir
 
 ```http
 GET /contacts
 ```
 
-**Response (200 OK)**
+**Yanıt (200 OK)**
 
 ```json
 {
@@ -90,9 +90,9 @@ GET /contacts
   "data": [
     {
       "_id": "507f1f77bcf86cd799439011",
-      "name": "John Doe",
-      "phoneNumber": "+1234567890",
-      "email": "john@example.com",
+      "name": "Ahmet Yılmaz",
+      "phoneNumber": "+905551234567",
+      "email": "ahmet@example.com",
       "isFavourite": false,
       "contactType": "personal",
       "createdAt": "2024-01-15T10:30:00.000Z",
@@ -102,13 +102,13 @@ GET /contacts
 }
 ```
 
-### Get Contact by ID
+### ID'ye Göre İletişim Getir
 
 ```http
 GET /contacts/:contactId
 ```
 
-**Response (200 OK)**
+**Yanıt (200 OK)**
 
 ```json
 {
@@ -116,9 +116,9 @@ GET /contacts/:contactId
   "message": "Successfully found contact with id: 507f1f77bcf86cd799439011!",
   "data": {
     "_id": "507f1f77bcf86cd799439011",
-    "name": "John Doe",
-    "phoneNumber": "+1234567890",
-    "email": "john@example.com",
+    "name": "Ahmet Yılmaz",
+    "phoneNumber": "+905551234567",
+    "email": "ahmet@example.com",
     "isFavourite": false,
     "contactType": "personal",
     "createdAt": "2024-01-15T10:30:00.000Z",
@@ -127,7 +127,7 @@ GET /contacts/:contactId
 }
 ```
 
-**Response (404 Not Found)**
+**Yanıt (404 Bulunamadı)**
 
 ```json
 {
@@ -135,94 +135,94 @@ GET /contacts/:contactId
 }
 ```
 
-## 🗂️ Project Structure
+## 🗂️ Proje Yapısı
 
 ```
 nodejs-hw-mongodb/
 ├── src/
 │   ├── controllers/
-│   │   └── contacts.js          # Request handlers
+│   │   └── contacts.js          # İstek işleyicileri
 │   ├── db/
 │   │   ├── models/
-│   │   │   └── contact.js       # Mongoose schema
+│   │   │   └── contact.js       # Mongoose şeması
 │   │   └── initMongoConnection.js
 │   ├── services/
-│   │   └── contacts.js          # Business logic
+│   │   └── contacts.js          # İş mantığı
 │   ├── utils/
-│   │   └── env.js               # Environment helper
-│   ├── server.js                # Express server setup
-│   └── index.js                 # Application entry point
-├── .env.example                 # Environment variables template
+│   │   └── env.js               # Ortam değişkeni yardımcısı
+│   ├── server.js                # Express sunucu kurulumu
+│   └── index.js                 # Uygulama giriş noktası
+├── .env.example                 # Ortam değişkenleri şablonu
 ├── .gitignore
 ├── .prettierrc
 ├── package.json
 └── README.md
 ```
 
-## 📊 Data Model
+## 📊 Veri Modeli
 
-### Contact Schema
+### İletişim Şeması
 
 ```javascript
 {
-  name: String (required),
-  phoneNumber: String (required),
-  email: String (optional),
-  isFavourite: Boolean (default: false),
-  contactType: String (enum: ['work', 'home', 'personal'], default: 'personal'),
-  createdAt: Date (auto-generated),
-  updatedAt: Date (auto-generated)
+  name: String (zorunlu),
+  phoneNumber: String (zorunlu),
+  email: String (opsiyonel),
+  isFavourite: Boolean (varsayılan: false),
+  contactType: String (enum: ['work', 'home', 'personal'], varsayılan: 'personal'),
+  createdAt: Date (otomatik oluşturulur),
+  updatedAt: Date (otomatik güncellenir)
 }
 ```
 
-## 🔧 Technologies Used
+## 🔧 Kullanılan Teknolojiler
 
-- **Node.js** - JavaScript runtime
+- **Node.js** - JavaScript çalışma ortamı
 - **Express** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - ODM for MongoDB
-- **dotenv** - Environment variable management
+- **MongoDB** - NoSQL veritabanı
+- **Mongoose** - MongoDB için ODM
+- **dotenv** - Ortam değişkeni yönetimi
 - **cors** - CORS middleware
 - **pino-http** - HTTP logger
-- **nodemon** - Development auto-restart
+- **nodemon** - Geliştirme otomatik yeniden başlatma
 
-## 🌐 Deployment
+## 🌐 Yayınlama
 
-This application is deployed on Render.com.
+Bu uygulama Render.com üzerinde yayınlanmıştır.
 
-**Live URL:** [Your Render deployment URL]
+**Canlı URL:** https://contacts-app-bdrd.onrender.com/contacts
 
-## 📝 Development
+## 📝 Geliştirme
 
-### Code Quality
+### Kod Kalitesi
 
-- ESLint for code linting
-- Prettier for code formatting
+- Kod denetimi için ESLint
+- Kod biçimlendirme için Prettier
 
-### Running Linter
+### Linter Çalıştırma
 
 ```bash
 npm run lint
 ```
 
-## 🤝 Contributing
+## 🤝 Katkıda Bulunma
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Depoyu fork edin
+2. Feature branch'inizi oluşturun (`git checkout -b feature/HarikaBirOzellik`)
+3. Değişikliklerinizi commit edin (`git commit -m 'Harika bir özellik ekle'`)
+4. Branch'inizi push edin (`git push origin feature/HarikaBirOzellik`)
+5. Pull Request açın
 
-## 📄 License
+## 📄 Lisans
 
-This project is created for educational purposes.
+Bu proje eğitim amaçlı oluşturulmuştur.
 
-## 👤 Author
+## 👤 Geliştirici
 
-Your Name - [Emre-Urun]
+İsminiz - [@Emre-Urun]
 
-## 🙏 Acknowledgments
+## 🙏 Teşekkürler
 
-- Thanks to the course instructors for the comprehensive assignment
-- MongoDB Atlas for database hosting
-- Render.com for application hosting
+- Kapsamlı ödev için kurs eğitmenlerine teşekkürler
+- Veritabanı barındırma için MongoDB Atlas'a teşekkürler
+- Uygulama barındırma için Render.com'a teşekkürler
