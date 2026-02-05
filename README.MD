@@ -1,136 +1,225 @@
-# İletişim API - Node.js MongoDB Projesi
+# 📇 Contacts API
 
-Node.js, Express ve MongoDB kullanılarak geliştirilmiş bir iletişim yönetim REST API'si. Bu proje CRUD işlemlerini, veritabanı entegrasyonunu ve doğru API mimarisini göstermektedir.
+Node.js ve Express.js kullanılarak geliştirilmiş, MongoDB veritabanı ile entegre edilmiş RESTful API projesi. Kişi bilgilerini yönetmek için tam CRUD (Create, Read, Update, Delete) operasyonlarını destekler.
 
 ## 🚀 Özellikler
 
-- **RESTful API** - Temiz ve sezgisel endpoint tasarımı
-- **MongoDB Entegrasyonu** - Mongoose ODM ile kalıcı veri depolama
-- **Express Framework** - Hızlı ve minimal web framework
-- **Hata Yönetimi** - Kapsamlı hata yönetim sistemi
-- **CORS Desteği** - Cross-origin kaynak paylaşımı desteği
-- **Loglama** - Pino ile istek loglama
-- **Ortam Değişkenleri** - Güvenli yapılandırma yönetimi
+- ✅ Tüm kişileri listeleme
+- ✅ ID'ye göre kişi sorgulama
+- ✅ Yeni kişi ekleme
+- ✅ Mevcut kişi bilgilerini güncelleme (PATCH)
+- ✅ Kişi silme
+- ✅ Kapsamlı hata yönetimi
+- ✅ MongoDB Atlas entegrasyonu
+- ✅ CORS desteği
+- ✅ Profesyonel loglama (Pino)
+- ✅ Modüler ve ölçeklenebilir mimari
+
+## 🛠️ Teknolojiler
+
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **MongoDB & Mongoose** - Veritabanı ve ODM
+- **Pino** - Yüksek performanslı loglama
+- **http-errors** - HTTP hata yönetimi
+- **dotenv** - Ortam değişkenleri yönetimi
+- **CORS** - Cross-Origin Resource Sharing
 
 ## 📋 Gereksinimler
 
-Projeyi çalıştırmadan önce aşağıdakilere sahip olduğunuzdan emin olun:
-
 - Node.js (v14 veya üzeri)
-- MongoDB Atlas hesabı
+- MongoDB Atlas hesabı veya yerel MongoDB kurulumu
 - npm veya yarn paket yöneticisi
 
-## 🛠️ Kurulum
+## 🔧 Kurulum
 
-1. **Depoyu klonlayın**
-
+1. **Projeyi klonlayın:**
 ```bash
-git clone https://github.com/Emre-Urun/nodejs-hw-mongodb.git
-cd nodejs-hw-mongodb
+git clone https://github.com/Emre-Urun/hw2-mongodb.git
+cd hw2-mongodb
 ```
 
-2. **Proje dalına geçin**
-
-```bash
-git checkout hw2-mongodb
-```
-
-3. **Bağımlılıkları yükleyin**
-
+2. **Bağımlılıkları yükleyin:**
 ```bash
 npm install
 ```
 
-4. **Ortam değişkenlerini yapılandırın**
+3. **Ortam değişkenlerini ayarlayın:**
 
-Kök dizinde `.env` dosyası oluşturun:
+Proje kök dizininde `.env` dosyası oluşturun:
 
 ```env
 PORT=3000
-MONGODB_USER=mongodb_kullanıcı_adınız
-MONGODB_PASSWORD=mongodb_şifreniz
-MONGODB_URL=mongodb_cluster_url
-MONGODB_DB=veritabanı_adınız
+MONGODB_USER=your_mongodb_username
+MONGODB_PASSWORD=your_mongodb_password
+MONGODB_URL=your_mongodb_cluster_url
+MONGODB_DB=your_database_name
 ```
 
-5. **Başlangıç verilerini içe aktarın**
-
-`contacts.json` dosyasını MongoDB Compass veya MongoDB Atlas arayüzünü kullanarak veritabanınıza aktarın.
-
-## 🏃‍♂️ Uygulamayı Çalıştırma
-
-### Geliştirme Modu
-
-```bash
-npm run dev
-```
-
-### Üretim Modu
-
+4. **Uygulamayı başlatın:**
 ```bash
 npm start
 ```
 
-Sunucu `http://localhost:3000` adresinde başlayacaktır (veya yapılandırdığınız PORT).
+Sunucu varsayılan olarak `http://localhost:3000` adresinde çalışacaktır.
 
-## 📡 API Endpoint'leri
+## 📚 API Endpoints
 
-### Tüm İletişimleri Getir
+### 1. Tüm Kişileri Getir
 
 ```http
 GET /contacts
 ```
 
-**Yanıt (200 OK)**
-
+**Başarılı Yanıt (200):**
 ```json
 {
   "status": 200,
   "message": "Successfully found contacts!",
   "data": [
     {
-      "_id": "507f1f77bcf86cd799439011",
+      "_id": "contact_id",
       "name": "Ahmet Yılmaz",
-      "phoneNumber": "+905551234567",
+      "phoneNumber": "+90 555 123 4567",
       "email": "ahmet@example.com",
       "isFavourite": false,
       "contactType": "personal",
-      "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2024-01-15T10:30:00.000Z"
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
     }
   ]
 }
 ```
 
-### ID'ye Göre İletişim Getir
+### 2. ID'ye Göre Kişi Getir
 
 ```http
 GET /contacts/:contactId
 ```
 
-**Yanıt (200 OK)**
-
+**Başarılı Yanıt (200):**
 ```json
 {
   "status": 200,
-  "message": "Successfully found contact with id: 507f1f77bcf86cd799439011!",
+  "message": "Successfully found contact with id: {contactId}!",
   "data": {
-    "_id": "507f1f77bcf86cd799439011",
+    "_id": "contact_id",
     "name": "Ahmet Yılmaz",
-    "phoneNumber": "+905551234567",
+    "phoneNumber": "+90 555 123 4567",
     "email": "ahmet@example.com",
     "isFavourite": false,
-    "contactType": "personal",
-    "createdAt": "2024-01-15T10:30:00.000Z",
-    "updatedAt": "2024-01-15T10:30:00.000Z"
+    "contactType": "personal"
   }
 }
 ```
 
-**Yanıt (404 Bulunamadı)**
-
+**Hata Yanıtı (404):**
 ```json
 {
+  "status": 404,
+  "message": "Contact not found"
+}
+```
+
+### 3. Yeni Kişi Oluştur
+
+```http
+POST /contacts
+```
+
+**İstek Gövdesi:**
+```json
+{
+  "name": "Mehmet Demir",
+  "phoneNumber": "+90 555 987 6543",
+  "email": "mehmet@example.com",
+  "isFavourite": true,
+  "contactType": "work"
+}
+```
+
+**Zorunlu Alanlar:**
+- `name` (string)
+- `phoneNumber` (string)
+- `contactType` (string: "work", "home", veya "personal")
+
+**İsteğe Bağlı Alanlar:**
+- `email` (string)
+- `isFavourite` (boolean)
+
+**Başarılı Yanıt (201):**
+```json
+{
+  "status": 201,
+  "message": "Successfully created a contact!",
+  "data": {
+    "_id": "new_contact_id",
+    "name": "Mehmet Demir",
+    "phoneNumber": "+90 555 987 6543",
+    "email": "mehmet@example.com",
+    "isFavourite": true,
+    "contactType": "work",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+### 4. Kişi Bilgilerini Güncelle
+
+```http
+PATCH /contacts/:contactId
+```
+
+**İstek Gövdesi (tüm alanlar isteğe bağlı):**
+```json
+{
+  "name": "Mehmet Demir (Güncellenmiş)",
+  "phoneNumber": "+90 555 111 2222",
+  "email": "mehmet.yeni@example.com",
+  "isFavourite": false,
+  "contactType": "personal"
+}
+```
+
+**Başarılı Yanıt (200):**
+```json
+{
+  "status": 200,
+  "message": "Successfully patched a contact!",
+  "data": {
+    "_id": "contact_id",
+    "name": "Mehmet Demir (Güncellenmiş)",
+    "phoneNumber": "+90 555 111 2222",
+    "email": "mehmet.yeni@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "updatedAt": "2024-01-02T00:00:00.000Z"
+  }
+}
+```
+
+**Hata Yanıtı (404):**
+```json
+{
+  "status": 404,
+  "message": "Contact not found"
+}
+```
+
+### 5. Kişi Sil
+
+```http
+DELETE /contacts/:contactId
+```
+
+**Başarılı Yanıt (204):**
+- Yanıt gövdesi yok (No Content)
+
+**Hata Yanıtı (404):**
+```json
+{
+  "status": 404,
   "message": "Contact not found"
 }
 ```
@@ -138,91 +227,106 @@ GET /contacts/:contactId
 ## 🗂️ Proje Yapısı
 
 ```
-nodejs-hw-mongodb/
 ├── src/
 │   ├── controllers/
-│   │   └── contacts.js          # İstek işleyicileri
+│   │   └── contacts.js          # İstek kontrolörleri
 │   ├── db/
-│   │   ├── models/
-│   │   │   └── contact.js       # Mongoose şeması
-│   │   └── initMongoConnection.js
+│   │   ├── model/
+│   │   │   └── contact.js       # Mongoose modeli
+│   │   └── initMongoConnection.js # MongoDB bağlantısı
+│   ├── middlewares/
+│   │   ├── errorHandler.js      # Hata yakalama middleware'i
+│   │   └── notFoundHandler.js   # 404 hatası middleware'i
+│   ├── routers/
+│   │   └── contacts.js          # API rotaları
 │   ├── services/
-│   │   └── contacts.js          # İş mantığı
+│   │   └── contacts.js          # İş mantığı servisleri
 │   ├── utils/
-│   │   └── env.js               # Ortam değişkeni yardımcısı
-│   ├── server.js                # Express sunucu kurulumu
-│   └── index.js                 # Uygulama giriş noktası
-├── .env.example                 # Ortam değişkenleri şablonu
+│   │   ├── ctrlWrapper.js       # Kontrolör sarmalayıcı
+│   │   └── env.js               # Ortam değişkenleri yardımcısı
+│   ├── index.js                 # Uygulama giriş noktası
+│   └── server.js                # Express sunucu yapılandırması
+├── .env                         # Ortam değişkenleri
 ├── .gitignore
-├── .prettierrc
 ├── package.json
 └── README.md
 ```
 
-## 📊 Veri Modeli
+## 🏗️ Mimari
 
-### İletişim Şeması
+Proje, **MVC (Model-View-Controller)** desenine benzer bir mimari kullanır:
 
-```javascript
-{
-  name: String (zorunlu),
-  phoneNumber: String (zorunlu),
-  email: String (opsiyonel),
-  isFavourite: Boolean (varsayılan: false),
-  contactType: String (enum: ['work', 'home', 'personal'], varsayılan: 'personal'),
-  createdAt: Date (otomatik oluşturulur),
-  updatedAt: Date (otomatik güncellenir)
-}
-```
+- **Models (db/model/):** MongoDB şemaları ve modelleri
+- **Controllers (controllers/):** HTTP isteklerini işler ve yanıt döner
+- **Services (services/):** İş mantığını ve veritabanı işlemlerini yönetir
+- **Routers (routers/):** API endpoint'lerini tanımlar
+- **Middlewares (middlewares/):** Hata yönetimi ve doğrulama
+- **Utils (utils/):** Yardımcı fonksiyonlar
 
-## 🔧 Kullanılan Teknolojiler
+## 🔒 Hata Yönetimi
 
-- **Node.js** - JavaScript çalışma ortamı
-- **Express** - Web framework
-- **MongoDB** - NoSQL veritabanı
-- **Mongoose** - MongoDB için ODM
-- **dotenv** - Ortam değişkeni yönetimi
-- **cors** - CORS middleware
-- **pino-http** - HTTP logger
-- **nodemon** - Geliştirme otomatik yeniden başlatma
+Proje kapsamlı hata yönetimi içerir:
 
-## 🌐 Yayınlama
+- **errorHandler:** Tüm uygulama hatalarını yakalar ve işler
+- **notFoundHandler:** Var olmayan rotalar için 404 hatası döner
+- **ctrlWrapper:** Async kontrolörleri sarar ve hataları otomatik yakalar
+- **http-errors:** Standart HTTP hata yanıtları oluşturur
 
-Bu uygulama Render.com üzerinde yayınlanmıştır.
+## 🧪 Test Etme
 
-**Canlı URL:** https://contacts-app-bdrd.onrender.com/contacts
+API'yi test etmek için Postman, Insomnia veya cURL kullanabilirsiniz:
 
-## 📝 Geliştirme
-
-### Kod Kalitesi
-
-- Kod denetimi için ESLint
-- Kod biçimlendirme için Prettier
-
-### Linter Çalıştırma
+**Örnek cURL Komutları:**
 
 ```bash
-npm run lint
+# Tüm kişileri listele
+curl http://localhost:3000/contacts
+
+# ID ile kişi getir
+curl http://localhost:3000/contacts/CONTACT_ID
+
+# Yeni kişi oluştur
+curl -X POST http://localhost:3000/contacts \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Kullanıcı",
+    "phoneNumber": "+90 555 000 1111",
+    "contactType": "personal"
+  }'
+
+# Kişi güncelle
+curl -X PATCH http://localhost:3000/contacts/CONTACT_ID \
+  -H "Content-Type: application/json" \
+  -d '{"isFavourite": true}'
+
+# Kişi sil
+curl -X DELETE http://localhost:3000/contacts/CONTACT_ID
 ```
 
-## 🤝 Katkıda Bulunma
+## 🚀 Deployment
 
-1. Depoyu fork edin
-2. Feature branch'inizi oluşturun (`git checkout -b feature/HarikaBirOzellik`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Harika bir özellik ekle'`)
-4. Branch'inizi push edin (`git push origin feature/HarikaBirOzellik`)
-5. Pull Request açın
+Proje [Render.com](https://render.com) üzerinde dağıtılabilir:
 
-## 📄 Lisans
+1. Render.com'da yeni bir Web Service oluşturun
+2. GitHub repository'nizi bağlayın
+3. Ortam değişkenlerini ekleyin
+4. Deploy branch'i olarak `hw3-crud` seçin
+5. Deploy edin!
 
-Bu proje eğitim amaçlı oluşturulmuştur.
+**Önemli:** Render.com'da ortam değişkenlerini eklemeyi unutmayın:
+- `MONGODB_USER`
+- `MONGODB_PASSWORD`
+- `MONGODB_URL`
+- `MONGODB_DB`
 
-## 👤 Geliştirici
+## 📝 Lisans
 
-İsminiz - [@Emre-Urun]
+Bu proje eğitim amaçlı geliştirilmiştir.
 
-## 🙏 Teşekkürler
+## 👨‍💻 Geliştirici
 
-- Kapsamlı ödev için kurs eğitmenlerine teşekkürler
-- Veritabanı barındırma için MongoDB Atlas'a teşekkürler
-- Uygulama barındırma için Render.com'a teşekkürler
+**[@Emre-Urun]**
+
+---
+
+⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!
