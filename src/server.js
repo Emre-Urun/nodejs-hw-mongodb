@@ -3,10 +3,9 @@ import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { env } from './utils/env.js';
-import {
-  getContactsController,
-  getContactsByIdController,
-} from './controllers/contacts.js';
+import router from './routers/contacts.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 const PORT = Number(env('PORT', '3000'));
@@ -25,17 +24,13 @@ export const setupServer = () => {
     }),
   );
 
-  //   Genel Get isteği
-  app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Sunucu çalışıyor!' });
-  });
-  //   Contacts ile ilgili route işlemleri
-  app.get('/contacts', getContactsController);
-  app.get('/contacts/:contactId', getContactsByIdController);
-  // 404 hata yönetimi
-  app.use((req, res, next) => {
-    res.status(404).json({ message: '!!!Not found!!!' });
-  });
+  // Router'ları kullanma
+  app.use('/contacts', router);
+
+  // 404 Not Found Handler
+  app.use(notFoundHandler);
+  // Genel Hata Yakalama Middleware'i
+  app.use(errorHandler);
 
   //   express kütüphanesinin çalışması için gereken listen methodu
   app.listen(PORT, () => {
