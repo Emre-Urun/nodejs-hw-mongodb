@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import Joi from 'joi';
 
 const contactsShema = new Schema(
   {
@@ -26,5 +27,21 @@ const contactsShema = new Schema(
   },
   { timestamps: true },
 );
+
+export const createContactSchema = Joi.object({
+  name: Joi.string().min(3).max(20).required(),
+  phoneNumber: Joi.string().min(3).max(20).required(),
+  email: Joi.string().min(3).max(20).email().optional(),
+  isFavourite: Joi.boolean(),
+  contactType: Joi.string().valid('work', 'home', 'personal'),
+});
+
+export const updateContactSchema = Joi.object({
+  name: Joi.string().min(3).max(20),
+  phoneNumber: Joi.string().min(3).max(20),
+  email: Joi.string().min(3).max(20).email().optional(),
+  isFavourite: Joi.boolean(),
+  contactType: Joi.string().valid('work', 'home', 'personal'),
+});
 
 export const Contact = model('Contact', contactsShema);

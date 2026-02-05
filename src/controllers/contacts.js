@@ -6,14 +6,35 @@ import {
   deleteContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 // Tüm kontakları getiren control
 const getContactsController = async (req, res) => {
-  const contact = await getContacts();
+  // 1. Query parametrelerini işleme
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+  // 2. Servisden hem veriyi hemde total count'ı alma
+  const { contacts, totalItems } = await getContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+  // 3. Sayfalama verilerini hesaplama
+  const paginationData = calculatePaginationData(totalItems, perPage, page);
+  // 4. Cevap oluşturma
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: contact,
+    data: {
+      data: contacts,
+      ...paginationData,
+    },
   });
 };
 

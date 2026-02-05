@@ -1,10 +1,44 @@
 import { Contact } from '../db/model/contact.js';
 
 // Tüm kontakları getiren service
-export const getContacts = async () => {
-  const response = await Contact.find();
-  return response;
+export const getContacts = async ({
+  page = 1,
+  perPage = 10,
+  sortBy = '_id',
+  sortOrder = 'asc',
+  filter = {},
+}) => {
+  // Verileri sayfalara bölerek getirme
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+  // dinamik filtreleme
+  const contactsQuery = {};
+  // eğer filtrede type varsa ekle
+  if (filter.type) {
+    contactsQuery.contactType = filter.type;
+  }
+  // eğer filtrede isFavourite varsa sorguya ekle boolen olduğu için undefined kontrolü yap
+  if (filter.isFavourite !== undefined) {
+    contactsQuery.isFavourite = filter.isFavourite;
+  }
+  if (filter.name) {
+    contactsQuery.name = { $regex: filter.name, $options: 'i' };
+  }
+  // verileri filtreleyerek, sıralayarak, sayfalara bölerek getirme
+  const contacts = await Contact.find(contactsQuery)
+    .sort({
+      [sortBy]: sortOrder,
+    })
+    .skip(skip)
+    .limit(limit);
+  // Toplam kontak sayısını getirme sorguya göre (sayfa hesabı için)
+  const totalItems = await Contact.countDocuments(contactsQuery);
+  return {
+    contacts,
+    totalItems,
+  };
 };
+
 // ID'ye göre kontak getiren service
 export const getContactsById = async (contactId) => {
   const response = await Contact.findById(contactId);
