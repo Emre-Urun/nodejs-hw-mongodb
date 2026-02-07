@@ -1,0 +1,42 @@
+export const loginUser = async (payload) => {
+  // TODO Kullanıcıyı email ile bulma
+  const user = await User.findOne({
+    email: payload.email,
+  });
+  // Eğer kullanıcı yoksa hata fırlat
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+  // TODO 2. Şifre doğrulama
+  const isEqual = await bcrypt.compare(payload.password, user.password);
+  // Eğer şifre geçersizse hata fırlat
+  if (!isEqual) {
+    throw createHttpError(401, 'Invalid email or password');
+  }
+  // TODO 3. var olan oturumu sonlandırma
+  await Session.deleteOne({
+    userId: user._id,
+  });
+  // TODO 4. Token oluşturma
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
+  // TODO 5. Tokenların ömürlerini belirleme
+  const accessTokenValidUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika
+  const refreshTokenValidUntil = new Date(
+    Date.now() + 30 * 24 * 60 * 60 * 1000,
+  ); // 30 gün
+  // TODO 6. Oturumu veritabanına kaydetme
+  await Session.create({
+    userId: user._id,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil,
+    refreshTokenValidUntil,
+  });
+  // TODO 7. Tokenları döndürme
+  return {
+    accessToken,
+    refreshToken,
+    _id: user._id,
+  };
+};

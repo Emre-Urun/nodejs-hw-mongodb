@@ -7,12 +7,13 @@ export const getContacts = async ({
   sortBy = '_id',
   sortOrder = 'asc',
   filter = {},
+  userId,
 }) => {
   // Verileri sayfalara bölerek getirme
   const limit = perPage;
   const skip = (page - 1) * perPage;
   // dinamik filtreleme
-  const contactsQuery = {};
+  const contactsQuery = { userId };
   // eğer filtrede type varsa ekle
   if (filter.type) {
     contactsQuery.contactType = filter.type;
@@ -40,8 +41,8 @@ export const getContacts = async ({
 };
 
 // ID'ye göre kontak getiren service
-export const getContactsById = async (contactId) => {
-  const response = await Contact.findById(contactId);
+export const getContactsById = async (contactId, userId) => {
+  const response = await Contact.findOne({ _id: contactId, userId: userId });
   return response;
 };
 // Yeni kontak oluşturan service
@@ -50,14 +51,19 @@ export const createContact = async (payload) => {
   return response;
 };
 // Update (PATCH) kontak service
-export const updateContact = async (contactId, payload) => {
-  const result = await Contact.findOneAndUpdate({ _id: contactId }, payload, {
-    new: true,
-  });
+export const updateContact = async (contactId, userId, payload) => {
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId, userId: userId }, // Sadece kendi kontağını güncelleyebilir
+    payload,
+    { new: true },
+  );
   return result;
 };
 // Delete kontak service
-export const deleteContact = async (contactId) => {
-  const result = await Contact.findOneAndDelete({ _id: contactId });
+export const deleteContact = async (contactId, userId) => {
+  const result = await Contact.findOneAndDelete({
+    _id: contactId,
+    userId: userId,
+  });
   return result;
 };

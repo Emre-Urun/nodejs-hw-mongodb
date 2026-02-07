@@ -11,23 +11,26 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
-// Tüm kontakları getiren control
+// ! Tüm kontakları getiren control
 const getContactsController = async (req, res) => {
-  // 1. Query parametrelerini işleme
+  // TODO 1. Query parametrelerini işleme
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
-  // 2. Servisden hem veriyi hemde total count'ı alma
+  // ! middlerware'den gelen user bilgisi ile userId'yi alma
+  const userId = req.user._id;
+  // TODO 2. Servisden hem veriyi hemde total count'ı alma
   const { contacts, totalItems } = await getContacts({
     page,
     perPage,
     sortBy,
     sortOrder,
     filter,
+    userId,
   });
-  // 3. Sayfalama verilerini hesaplama
+  // TODO 3. Sayfalama verilerini hesaplama
   const paginationData = calculatePaginationData(totalItems, perPage, page);
-  // 4. Cevap oluşturma
+  // TODO 4. Cevap oluşturma
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
@@ -38,10 +41,12 @@ const getContactsController = async (req, res) => {
   });
 };
 
-//   ID'ye göre kontak getiren control
+//  ! ID'ye göre kontak getiren control
 const getContactsByIdController = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await getContactsById(contactId);
+  // ! Middleware'den gelen user bilgisi ile userId'yi alma
+  const userId = req.user._id;
+  const contact = await getContactsById(contactId, userId);
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
   }
@@ -52,9 +57,9 @@ const getContactsByIdController = async (req, res) => {
   });
 };
 
-// Yeni kontak oluşturan control
+// ! Yeni kontak oluşturan control
 const createContactController = async (req, res) => {
-  const payload = req.body;
+  const payload = { ...req.body, userId: req.user._id };
   const newContact = await createContact(payload);
   res.status(201).json({
     status: 201,
@@ -62,11 +67,14 @@ const createContactController = async (req, res) => {
     data: newContact,
   });
 };
-// Update (PATCH) kontak control
+
+// ! Update (PATCH) kontak control
 const patchContactController = async (req, res) => {
   const { contactId } = req.params;
-  const payload = req.body;
-  const result = await updateContact(contactId, payload);
+  const userId = req.user._id;
+
+  const result = await updateContact(contactId, userId, req.body); // userId eklendi
+
   if (!result) {
     throw createHttpError(404, 'Contact not found');
   }
@@ -76,10 +84,14 @@ const patchContactController = async (req, res) => {
     data: result,
   });
 };
-// Delete kontak control
+
+// ! Delete kontak control
 const deleteContactController = async (req, res) => {
   const { contactId } = req.params;
-  const result = await deleteContact(contactId);
+  const userId = req.user._id;
+
+  const result = await deleteContact(contactId, userId); // userId eklendi
+
   if (!result) {
     throw createHttpError(404, 'Contact not found');
   }
