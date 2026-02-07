@@ -1,228 +1,419 @@
-# İletişim API - Node.js MongoDB Projesi
+# 📇 Contact Management API
 
-Node.js, Express ve MongoDB kullanılarak geliştirilmiş bir iletişim yönetim REST API'si. Bu proje CRUD işlemlerini, veritabanı entegrasyonunu ve doğru API mimarisini göstermektedir.
+Modern kimlik doğrulama ve yetkilendirme sistemine sahip, güvenli bir kişi yönetim API'si. Bu proje, kullanıcıların kendi kişi listelerini oluşturmalarına, yönetmelerine ve güvenli bir şekilde erişmelerine olanak tanır.
 
-## 🚀 Özellikler
+## ✨ Özellikler
 
-- **RESTful API** - Temiz ve sezgisel endpoint tasarımı
-- **MongoDB Entegrasyonu** - Mongoose ODM ile kalıcı veri depolama
-- **Express Framework** - Hızlı ve minimal web framework
-- **Hata Yönetimi** - Kapsamlı hata yönetim sistemi
-- **CORS Desteği** - Cross-origin kaynak paylaşımı desteği
-- **Loglama** - Pino ile istek loglama
-- **Ortam Değişkenleri** - Güvenli yapılandırma yönetimi
+- 🔐 **Güvenli Kimlik Doğrulama**: JWT tabanlı access ve refresh token sistemi
+- 👤 **Kullanıcı Yönetimi**: Kayıt olma, giriş yapma ve oturum yönetimi
+- 📱 **Kişi Yönetimi**: CRUD işlemleriyle tam kişi kontrolü
+- 🔒 **Veri Gizliliği**: Her kullanıcı sadece kendi kişilerine erişebilir
+- 🔍 **Gelişmiş Filtreleme**: Kişi tipi, favori durumu ve isme göre filtreleme
+- 📄 **Sayfalama ve Sıralama**: Büyük veri setleri için optimize edilmiş listeleme
+- ✅ **Veri Doğrulama**: Joi ile kapsamlı input validasyonu
+- 🍪 **Cookie Tabanlı Oturum**: Güvenli refresh token yönetimi
+
+## 🛠️ Teknolojiler
+
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Veritabanı**: MongoDB (Mongoose ODM)
+- **Kimlik Doğrulama**: JWT (jsonwebtoken)
+- **Şifreleme**: bcrypt
+- **Validasyon**: Joi
+- **Loglama**: Pino
+- **HTTP İstekleri**: CORS destekli
+- **Deployment**: Render.com
 
 ## 📋 Gereksinimler
 
-Projeyi çalıştırmadan önce aşağıdakilere sahip olduğunuzdan emin olun:
-
 - Node.js (v14 veya üzeri)
-- MongoDB Atlas hesabı
-- npm veya yarn paket yöneticisi
+- MongoDB hesabı (Atlas önerilir)
+- npm veya yarn
 
-## 🛠️ Kurulum
+## 🚀 Kurulum
 
-1. **Depoyu klonlayın**
-
+### 1. Projeyi klonlayın
 ```bash
-git clone https://github.com/Emre-Urun/nodejs-hw-mongodb.git
-cd nodejs-hw-mongodb
+git clone https://github.com/kullaniciadi/contact-management-api.git
+cd contact-management-api
 ```
 
-2. **Proje dalına geçin**
-
-```bash
-git checkout hw2-mongodb
-```
-
-3. **Bağımlılıkları yükleyin**
-
+### 2. Bağımlılıkları yükleyin
 ```bash
 npm install
 ```
 
-4. **Ortam değişkenlerini yapılandırın**
+### 3. Çevre değişkenlerini ayarlayın
 
-Kök dizinde `.env` dosyası oluşturun:
-
+Proje kök dizininde `.env` dosyası oluşturun:
 ```env
+# MongoDB Bağlantı Bilgileri
+MONGODB_USER=kullanici_adiniz
+MONGODB_PASSWORD=sifreniz
+MONGODB_URL=cluster.mongodb.net
+MONGODB_DB=veritabani_adi
+
+# Sunucu Ayarları
 PORT=3000
-MONGODB_USER=mongodb_kullanıcı_adınız
-MONGODB_PASSWORD=mongodb_şifreniz
-MONGODB_URL=mongodb_cluster_url
-MONGODB_DB=veritabanı_adınız
+
+# JWT Secret (Güçlü bir secret key kullanın)
+JWT_SECRET=super_guclu_secret_key_buraya
 ```
 
-5. **Başlangıç verilerini içe aktarın**
+### 4. Uygulamayı başlatın
 
-`contacts.json` dosyasını MongoDB Compass veya MongoDB Atlas arayüzünü kullanarak veritabanınıza aktarın.
-
-## 🏃‍♂️ Uygulamayı Çalıştırma
-
-### Geliştirme Modu
-
+**Geliştirme ortamı:**
 ```bash
 npm run dev
 ```
 
-### Üretim Modu
-
+**Production ortamı:**
 ```bash
 npm start
 ```
 
-Sunucu `http://localhost:3000` adresinde başlayacaktır (veya yapılandırdığınız PORT).
+Uygulama `http://localhost:3000` adresinde çalışmaya başlayacaktır.
 
-## 📡 API Endpoint'leri
+## 📚 API Endpoints
 
-### Tüm İletişimleri Getir
+### 🔓 Kimlik Doğrulama Endpoints
 
+#### Kayıt Ol
 ```http
-GET /contacts
+POST /auth/register
+Content-Type: application/json
+
+{
+  "name": "Ahmet Yılmaz",
+  "email": "ahmet@example.com",
+  "password": "guvenli123"
+}
 ```
 
-**Yanıt (200 OK)**
+**Başarılı Yanıt (201):**
+```json
+{
+  "status": 201,
+  "message": "Successfully registered a user!",
+  "data": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Ahmet Yılmaz",
+    "email": "ahmet@example.com",
+    "createdAt": "2024-02-07T10:00:00.000Z"
+  }
+}
+```
 
+#### Giriş Yap
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "ahmet@example.com",
+  "password": "guvenli123"
+}
+```
+
+**Başarılı Yanıt (200):**
+```json
+{
+  "status": 200,
+  "message": "Successfully logged in an user!",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+*Not: Refresh token otomatik olarak cookie'ye kaydedilir.*
+
+#### Oturumu Yenile
+```http
+POST /auth/refresh
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Başarılı Yanıt (200):**
+```json
+{
+  "status": 200,
+  "message": "Successfully refreshed a session!",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+#### Çıkış Yap
+```http
+POST /auth/logout
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Başarılı Yanıt (204):** *No Content*
+
+---
+
+### 📇 Kişi Yönetimi Endpoints
+
+*Tüm kişi endpoints'leri kimlik doğrulama gerektirir. Authorization header'ında Bearer token gönderilmelidir.*
+
+#### Tüm Kişileri Listele
+```http
+GET /contacts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Query Parametreleri:**
+- `page` (varsayılan: 1) - Sayfa numarası
+- `perPage` (varsayılan: 10) - Sayfa başına kayıt
+- `sortBy` (varsayılan: _id) - Sıralama alanı (_id, name, createdAt, updatedAt)
+- `sortOrder` (varsayılan: asc) - Sıralama yönü (asc, desc)
+- `type` - Kişi tipi filtresi (work, home, personal)
+- `isFavourite` - Favori durumu (true, false)
+- `name` - İsim araması
+
+**Örnek İstek:**
+```http
+GET /contacts?page=1&perPage=5&sortBy=name&sortOrder=asc&type=work&isFavourite=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Başarılı Yanıt (200):**
 ```json
 {
   "status": 200,
   "message": "Successfully found contacts!",
-  "data": [
-    {
-      "_id": "507f1f77bcf86cd799439011",
-      "name": "Ahmet Yılmaz",
-      "phoneNumber": "+905551234567",
-      "email": "ahmet@example.com",
-      "isFavourite": false,
-      "contactType": "personal",
-      "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2024-01-15T10:30:00.000Z"
-    }
-  ]
+  "data": {
+    "data": [
+      {
+        "_id": "507f1f77bcf86cd799439011",
+        "name": "Mehmet Demir",
+        "phoneNumber": "+905551234567",
+        "email": "mehmet@work.com",
+        "isFavourite": true,
+        "contactType": "work",
+        "userId": "507f191e810c19729de860ea",
+        "createdAt": "2024-02-07T10:00:00.000Z",
+        "updatedAt": "2024-02-07T10:00:00.000Z"
+      }
+    ],
+    "page": 1,
+    "perPage": 5,
+    "totalItems": 1,
+    "totalPages": 1,
+    "hasNextPage": false,
+    "hasPreviousPage": false
+  }
 }
 ```
 
-### ID'ye Göre İletişim Getir
-
+#### ID'ye Göre Kişi Getir
 ```http
 GET /contacts/:contactId
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-**Yanıt (200 OK)**
-
+**Başarılı Yanıt (200):**
 ```json
 {
   "status": 200,
   "message": "Successfully found contact with id: 507f1f77bcf86cd799439011!",
   "data": {
     "_id": "507f1f77bcf86cd799439011",
-    "name": "Ahmet Yılmaz",
+    "name": "Mehmet Demir",
     "phoneNumber": "+905551234567",
-    "email": "ahmet@example.com",
-    "isFavourite": false,
-    "contactType": "personal",
-    "createdAt": "2024-01-15T10:30:00.000Z",
-    "updatedAt": "2024-01-15T10:30:00.000Z"
+    "email": "mehmet@work.com",
+    "isFavourite": true,
+    "contactType": "work",
+    "userId": "507f191e810c19729de860ea",
+    "createdAt": "2024-02-07T10:00:00.000Z",
+    "updatedAt": "2024-02-07T10:00:00.000Z"
   }
 }
 ```
 
-**Yanıt (404 Bulunamadı)**
+#### Yeni Kişi Oluştur
+```http
+POST /contacts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
 
-```json
 {
-  "message": "Contact not found"
+  "name": "Ayşe Kaya",
+  "phoneNumber": "+905559876543",
+  "email": "ayse@example.com",
+  "isFavourite": false,
+  "contactType": "personal"
 }
 ```
 
-## 🗂️ Proje Yapısı
-
+**Başarılı Yanıt (201):**
+```json
+{
+  "status": 201,
+  "message": "Successfully created a contact!",
+  "data": {
+    "_id": "507f1f77bcf86cd799439012",
+    "name": "Ayşe Kaya",
+    "phoneNumber": "+905559876543",
+    "email": "ayse@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "userId": "507f191e810c19729de860ea",
+    "createdAt": "2024-02-07T11:00:00.000Z",
+    "updatedAt": "2024-02-07T11:00:00.000Z"
+  }
+}
 ```
-nodejs-hw-mongodb/
+
+#### Kişiyi Güncelle
+```http
+PATCH /contacts/:contactId
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "name": "Ayşe Kaya Yılmaz",
+  "isFavourite": true
+}
+```
+
+**Başarılı Yanıt (200):**
+```json
+{
+  "status": 200,
+  "message": "Successfully patched a contact!",
+  "data": {
+    "_id": "507f1f77bcf86cd799439012",
+    "name": "Ayşe Kaya Yılmaz",
+    "phoneNumber": "+905559876543",
+    "email": "ayse@example.com",
+    "isFavourite": true,
+    "contactType": "personal",
+    "userId": "507f191e810c19729de860ea",
+    "createdAt": "2024-02-07T11:00:00.000Z",
+    "updatedAt": "2024-02-07T12:00:00.000Z"
+  }
+}
+```
+
+#### Kişiyi Sil
+```http
+DELETE /contacts/:contactId
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Başarılı Yanıt (204):** *No Content*
+
+## 🔒 Güvenlik
+
+### Kimlik Doğrulama Akışı
+
+1. **Kayıt**: Kullanıcı `/auth/register` endpoint'ine kayıt olur, şifre bcrypt ile hashlenir
+2. **Giriş**: Kullanıcı `/auth/login` ile giriş yapar
+   - Access Token (15 dakika geçerli) response body'de döner
+   - Refresh Token (30 gün geçerli) HTTP-only cookie olarak ayarlanır
+3. **API İstekleri**: Her korumalı endpoint isteği `Authorization: Bearer <accessToken>` header'ı gerektirir
+4. **Token Yenileme**: Access token süresi dolduğunda, `/auth/refresh` ile yeni token alınır
+5. **Çıkış**: `/auth/logout` ile oturum sonlandırılır ve refresh token geçersiz kılınır
+
+### Veri Gizliliği
+
+- Her kullanıcı sadece kendi kişilerine erişebilir
+- Tüm kişi işlemleri `userId` ile filtrelenir
+- Şifreler hiçbir zaman plain text olarak saklanmaz veya döndürülmez
+
+## 📁 Proje Yapısı
+```
+contact-management-api/
 ├── src/
 │   ├── controllers/
-│   │   └── contacts.js          # İstek işleyicileri
+│   │   ├── auth.js          # Kimlik doğrulama kontrolörleri
+│   │   └── contacts.js      # Kişi kontrolörleri
 │   ├── db/
-│   │   ├── models/
-│   │   │   └── contact.js       # Mongoose şeması
+│   │   ├── model/
+│   │   │   ├── contact.js   # Contact modeli ve validasyonları
+│   │   │   ├── user.js      # User modeli ve validasyonları
+│   │   │   └── session.js   # Session modeli
 │   │   └── initMongoConnection.js
+│   ├── middlewares/
+│   │   ├── authenticate.js  # JWT doğrulama middleware
+│   │   ├── errorHandler.js
+│   │   ├── isValidId.js
+│   │   ├── notFoundHandler.js
+│   │   └── validateBody.js
+│   ├── routers/
+│   │   ├── auth.js          # Kimlik doğrulama rotaları
+│   │   └── contacts.js      # Kişi rotaları
 │   ├── services/
-│   │   └── contacts.js          # İş mantığı
+│   │   ├── auth.js          # Kimlik doğrulama servisleri
+│   │   └── contacts.js      # Kişi servisleri
 │   ├── utils/
-│   │   └── env.js               # Ortam değişkeni yardımcısı
-│   ├── server.js                # Express sunucu kurulumu
-│   └── index.js                 # Uygulama giriş noktası
-├── .env.example                 # Ortam değişkenleri şablonu
+│   │   ├── calculatePaginationData.js
+│   │   ├── ctrlWrapper.js
+│   │   ├── env.js
+│   │   ├── parseFilterParams.js
+│   │   ├── parsePaginationParams.js
+│   │   └── parseSortParams.js
+│   ├── index.js             # Uygulama giriş noktası
+│   └── server.js            # Express server yapılandırması
+├── .env                      # Çevre değişkenleri (git'e eklenmez)
 ├── .gitignore
-├── .prettierrc
 ├── package.json
 └── README.md
 ```
 
-## 📊 Veri Modeli
+## ⚠️ Hata Kodları
 
-### İletişim Şeması
+| Kod | Açıklama |
+|-----|----------|
+| 200 | İstek başarılı |
+| 201 | Kaynak oluşturuldu |
+| 204 | Başarılı, içerik yok |
+| 400 | Hatalı istek (validasyon hatası) |
+| 401 | Yetkisiz (kimlik doğrulama gerekli veya başarısız) |
+| 404 | Kaynak bulunamadı |
+| 409 | Çakışma (örn: email zaten kullanımda) |
+| 500 | Sunucu hatası |
 
-```javascript
-{
-  name: String (zorunlu),
-  phoneNumber: String (zorunlu),
-  email: String (opsiyonel),
-  isFavourite: Boolean (varsayılan: false),
-  contactType: String (enum: ['work', 'home', 'personal'], varsayılan: 'personal'),
-  createdAt: Date (otomatik oluşturulur),
-  updatedAt: Date (otomatik güncellenir)
-}
-```
+## 🧪 Test Etme
 
-## 🔧 Kullanılan Teknolojiler
+Postman veya Thunder Client kullanarak API'yi test edebilirsiniz:
 
-- **Node.js** - JavaScript çalışma ortamı
-- **Express** - Web framework
-- **MongoDB** - NoSQL veritabanı
-- **Mongoose** - MongoDB için ODM
-- **dotenv** - Ortam değişkeni yönetimi
-- **cors** - CORS middleware
-- **pino-http** - HTTP logger
-- **nodemon** - Geliştirme otomatik yeniden başlatma
+1. Önce `/auth/register` ile kullanıcı oluşturun
+2. `/auth/login` ile giriş yapın ve access token'ı alın
+3. Access token'ı diğer isteklerde `Authorization: Bearer <token>` olarak kullanın
+4. Token süresi dolduğunda `/auth/refresh` ile yenileyin
 
-## 🌐 Yayınlama
+## 🌐 Deployment
 
-Bu uygulama Render.com üzerinde yayınlanmıştır.
+Proje Render.com üzerinde deploy edilmiştir. Deploy etmek için:
 
-**Canlı URL:** https://contacts-app-bdrd.onrender.com/contacts
+1. Render.com hesabı oluşturun
+2. GitHub repository'nizi bağlayın
+3. Web Service oluşturun
+4. Environment variables'ları ekleyin
+5. Deploy edin
 
-## 📝 Geliştirme
-
-### Kod Kalitesi
-
-- Kod denetimi için ESLint
-- Kod biçimlendirme için Prettier
-
-### Linter Çalıştırma
-
-```bash
-npm run lint
-```
+**Önemli**: `.env` dosyasındaki tüm değişkenleri Render'da tanımlamayı unutmayın!
 
 ## 🤝 Katkıda Bulunma
 
-1. Depoyu fork edin
-2. Feature branch'inizi oluşturun (`git checkout -b feature/HarikaBirOzellik`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Harika bir özellik ekle'`)
-4. Branch'inizi push edin (`git push origin feature/HarikaBirOzellik`)
-5. Pull Request açın
+1. Fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'feat: Add amazing feature'`)
+4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
 
-## 📄 Lisans
 
-Bu proje eğitim amaçlı oluşturulmuştur.
+## 📧 İletişim
 
-## 👤 Geliştirici
+Proje Sahibi - [@Emre-Urun](https://github.com/Emre-Urun)
 
-İsminiz - [@Emre-Urun]
+Proje Linki: https://github.com/Emre-Urun/nodejs-hw-mongodb.git
 
-## 🙏 Teşekkürler
+---
 
-- Kapsamlı ödev için kurs eğitmenlerine teşekkürler
-- Veritabanı barındırma için MongoDB Atlas'a teşekkürler
-- Uygulama barındırma için Render.com'a teşekkürler
+⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
