@@ -14,6 +14,7 @@ import {
 } from '../db/model/contact.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = Router();
 router.use(authenticate); // ! Tüm kontak rotaları için kimlik doğrulama middleware'ini ekliyoruz
@@ -25,6 +26,7 @@ router.get('/:contactId', isValidId, ctrlWrapper(getContactsByIdController));
 // ! Yeni kontak oluşturma isteği ( /contacts )
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
@@ -32,9 +34,11 @@ router.post(
 router.patch(
   '/:contactId',
   isValidId,
+  upload.single('photo'),
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
 // ! DELETE ile kontak silme isteği ( /contacts/:contactId )
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
+
 export default router;

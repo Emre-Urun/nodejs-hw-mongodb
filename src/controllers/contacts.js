@@ -10,6 +10,7 @@ import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 // ! Tüm kontakları getiren control
 const getContactsController = async (req, res) => {
@@ -60,6 +61,13 @@ const getContactsByIdController = async (req, res) => {
 // ! Yeni kontak oluşturan control
 const createContactController = async (req, res) => {
   const payload = { ...req.body, userId: req.user._id };
+  // TODO Photo için yapılan ayar
+  const photo = req.file;
+  // TODO Eğer bir photo geldiyse cloudinarye yükle
+  if (photo) {
+    const photoUrl = await saveFileToCloudinary(photo);
+    payload.photo = photoUrl; //URL' yi database gidecek veriye ekle
+  }
   const newContact = await createContact(payload);
   res.status(201).json({
     status: 201,
@@ -72,8 +80,15 @@ const createContactController = async (req, res) => {
 const patchContactController = async (req, res) => {
   const { contactId } = req.params;
   const userId = req.user._id;
-
-  const result = await updateContact(contactId, userId, req.body); // userId eklendi
+  // TODO Photo kısmı
+  const payload = { ...req.body };
+  const photo = req.file;
+  // Eğer foto varsa yükle ve payloada ekle
+  if (photo) {
+    const photoUrl = await saveFileToCloudinary(photo);
+    payload.photo = photoUrl;
+  }
+  const result = await updateContact(contactId, userId, req.body);
 
   if (!result) {
     throw createHttpError(404, 'Contact not found');

@@ -3,6 +3,8 @@ import {
   refreshUserSession,
   loginUser,
   logoutUser,
+  requestResetToken,
+  resetPassword,
 } from '../services/auth.js';
 // ! Kullanıcı kaydı'ı oluşturma
 export const registerUserController = async (req, res) => {
@@ -75,4 +77,26 @@ export const logoutUserController = async (req, res) => {
   res.clearCookie('sessionId');
   // TODO 4. Cevabı oluşturma
   res.status(204).send();
+};
+// ! Şifre sıfırlama emaili gönderme
+export const sendResetEmailController = async (req, res) => {
+  // TODO 1. Body'den email alma
+  const { email } = req.body;
+  // TODO 2. Servise giderek reset token alma
+  await requestResetToken({ email });
+  // TODO 3. Cevabı oluşturma
+  res.status(200).json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+  });
+};
+// ! Şifre sıfırlama
+export const resetPasswordController = async (req, res) => {
+  // TODO 1. Body'den token ve şifreyi alma
+  await resetPassword(req.body);
+  // TODO 2. Cevabı oluşturma
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+  });
 };
