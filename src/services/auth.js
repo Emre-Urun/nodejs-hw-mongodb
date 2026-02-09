@@ -37,7 +37,7 @@ export const loginUser = async (payload) => {
   });
   // Eğer kullanıcı yoksa hata fırlat
   if (!user) {
-    throw createHttpError(404, 'User not found');
+    throw createHttpError(401, 'Invalid credentials');
   }
   // TODO 2. Şifre doğrulama
   const isEqual = await bcrypt.compare(payload.password, user.password);
@@ -68,7 +68,7 @@ export const loginUser = async (payload) => {
 // ! Kullanıcı oturumunu yenileme
 export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   // TODO 1. Oturumu veritabanında bulma(sessionId ile)
-  const session = await Session.findById({
+  const session = await Session.findOne({
     _id: sessionId,
     refreshToken: refreshToken,
   });
@@ -103,7 +103,7 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   return {
     accessToken: newAccessToken,
     refreshToken: newRefreshToken,
-    _id: session._id, // yeni oturumun id'sini döndür
+    _id: newSession._id, // yeni oturumun id'sini döndür
   };
 };
 

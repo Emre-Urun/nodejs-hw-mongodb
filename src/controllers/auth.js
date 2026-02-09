@@ -43,10 +43,6 @@ export const loginUserController = async (req, res) => {
 export const refreshUserSessionController = async (req, res) => {
   // TODO 1. Cookie'den refresh tokenı alma
   const { sessionId, refreshToken } = req.cookies;
-  // --- HATA AYIKLAMA LOGLARI ---
-  console.log('--- REFRESH KONTROL ---');
-  console.log("Cookie'den gelen SessionID:", sessionId);
-  console.log("Cookie'den gelen RefreshToken:", refreshToken);
   // TODO 2. Servise giderek yeni access token alma
   const session = await refreshUserSession({ sessionId, refreshToken });
   // TODO 3. Yeni refresh tokenı cookie'ye kaydetme
