@@ -1,3 +1,6 @@
+import dns from 'node:dns';
+dns.setDefaultResultOrder('ipv4first');
+
 import { setupServer } from './server.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
 

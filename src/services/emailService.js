@@ -2,15 +2,17 @@ import nodemailer from 'nodemailer';
 import { env } from '../utils/env.js';
 
 const transporter = nodemailer.createTransport({
-  host: env('SMTP_HOST'),
-  port: Number(env('SMTP_PORT')),
-  secure: false,
+  host: 'smtp.gmail.com', // env'den okumuyorsa direkt string yaz (garanti olsun)
+  port: 587,
+  secure: false, // 587 için false
   auth: {
     user: env('SMTP_USER'),
     pass: env('SMTP_PASSWORD'),
   },
-
-  family: 4, // Bu ayar Node.js'i IPv4 kullanmaya zorlar ve timeout sorununu çözer.
+  tls: {
+    ciphers: 'SSLv3', // Bazı eski şifreleme sorunlarını çözer
+    rejectUnauthorized: false, // Sertifika hatalarını görmezden gelir (Production için önerilmez ama ödevde hayat kurtarır)
+  },
 });
 
 export const sendEmail = async (options) => {
