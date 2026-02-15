@@ -1,0 +1,10 @@
+tags:
+  - Auth
+summary: Çıkış yap
+operationId: logoutUser
+description: 'Kullanıcı oturumunu sonlandırır ve cookieleri temizler.'
+responses:
+  '204':
+    description: Başarıyla çıkış yapıldı
+  '401':
+    description: Oturum bulunamadı

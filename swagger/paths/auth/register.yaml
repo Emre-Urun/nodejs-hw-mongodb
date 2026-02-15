@@ -1,0 +1,50 @@
+tags:
+  - Auth
+summary: Kullanıcı kaydı oluştur
+operationId: registerUser
+description: 'Yeni bir kullanıcı hesabı oluşturur.'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            type: string
+            example: John Doe
+          email:
+            type: string
+            format: email
+            example: john@example.com
+          password:
+            type: string
+            example: password123
+responses:
+  '201':
+    description: Kullanıcı başarıyla oluşturuldu
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully registered a user!
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+  '409':
+    description: Email zaten kullanımda

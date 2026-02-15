@@ -1,0 +1,63 @@
+tags:
+  - Contacts
+summary: Yeni kişi oluştur
+operationId: createContact
+description: 'Yeni bir rehber kaydı oluşturur. Fotoğraf yüklenebilir.'
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+        properties:
+          name:
+            type: string
+            description: Kişinin adı
+            example: Ali Veli
+          phoneNumber:
+            type: string
+            description: Telefon numarası
+            example: '+905551234567'
+          email:
+            type: string
+            format: email
+            description: E-posta adresi
+            example: ali@example.com
+          isFavourite:
+            type: boolean
+            default: false
+          contactType:
+            type: string
+            enum: ['work', 'home', 'personal']
+            default: 'personal'
+          photo:
+            type: string
+            format: binary
+            description: Kişi fotoğrafı (Dosya yükleme)
+responses:
+  '201':
+    description: Kişi başarıyla oluşturuldu
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a contact!
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                name:
+                  type: string
+                photo:
+                  type: string

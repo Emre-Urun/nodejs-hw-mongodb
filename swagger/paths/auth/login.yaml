@@ -1,0 +1,48 @@
+tags:
+  - Auth
+summary: Kullanıcı girişi yap
+operationId: loginUser
+description: 'Giriş yapar ve Access Token döndürür. Refresh Token ve Session ID cookie olarak ayarlanır.'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            format: email
+            example: john@example.com
+          password:
+            type: string
+            example: password123
+responses:
+  '200':
+    description: Başarıyla giriş yapıldı
+    headers:
+      Set-Cookie:
+        schema:
+          type: string
+          example: refreshToken=abcde12345; Path=/; HttpOnly
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully logged in an user!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: 'base64_encoded_access_token_here'
+  '401':
+    description: Hatalı giriş bilgileri

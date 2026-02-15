@@ -1,0 +1,87 @@
+tags:
+  - Contacts
+summary: Tüm kişileri getir
+operationId: getContacts
+description: 'Sayfalama, sıralama ve filtreleme özellikleri ile kişileri listeler.'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+      default: 1
+    description: Sayfa numarası
+  - in: query
+    name: perPage
+    schema:
+      type: integer
+      default: 10
+    description: Sayfa başına gösterilecek kişi sayısı
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+      default: _id
+      enum: [_id, name, createdAt, updatedAt]
+    description: Sıralanacak alan
+  - in: query
+    name: sortOrder
+    schema:
+      type: string
+      default: asc
+      enum: [asc, desc]
+    description: Sıralama yönü (artan/azalan)
+  - in: query
+    name: type
+    schema:
+      type: string
+      enum: [work, home, personal]
+    description: Kişi tipine göre filtrele
+  - in: query
+    name: isFavourite
+    schema:
+      type: boolean
+    description: Favori durumuna göre filtrele
+responses:
+  '200':
+    description: Kişiler başarıyla listelendi
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found contacts!
+            data:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      photo:
+                        type: string
+                page:
+                  type: integer
+                perPage:
+                  type: integer
+                totalItems:
+                  type: integer
+                totalPages:
+                  type: integer
+                hasNextPage:
+                  type: boolean
+                hasPreviousPage:
+                  type: boolean

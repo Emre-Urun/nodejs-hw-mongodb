@@ -1,0 +1,27 @@
+tags:
+  - Auth
+summary: Oturumu yenile (Refresh Token)
+operationId: refreshUserSession
+description: 'Mevcut Refresh Token ve Session ID cookielerini kullanarak yeni bir Access Token alır.'
+responses:
+  '200':
+    description: Oturum başarıyla yenilendi
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully refreshed a session!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: 'new_base64_encoded_access_token'
+  '401':
+    description: Session bulunamadı veya süresi dolmuş

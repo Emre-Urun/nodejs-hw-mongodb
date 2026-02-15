@@ -1,0 +1,38 @@
+tags:
+  - Auth
+summary: Şifreyi sıfırla
+operationId: resetPassword
+description: 'Token kullanarak kullanıcının şifresini günceller.'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - password
+          - token
+        properties:
+          password:
+            type: string
+            description: Yeni şifre
+            example: newPassword123
+          token:
+            type: string
+            description: Mail ile gelen JWT token
+            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+responses:
+  '200':
+    description: Şifre başarıyla güncellendi
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Password has been successfully reset.
+  '401':
+    description: Token geçersiz veya süresi dolmuş
